@@ -44,58 +44,24 @@ class Admin extends CI_Controller {
 		$this->template->_partialsAdmin('admin/bagian/index', $data);
 	}
 
-	
-	public function tambahBagian()
-	{
-		$data['title'] = "Bagian";
-		$data['breadcrumb'] = " Tambah Bagian";
-		
-		$this->template->_partialsAdmin('admin/bagian/tambah', $data);
-	}
-	
-	function storeBagian()
-	{
-		$nama_bagian = $this->input->post('nama_bagian');
-		$departemen = $this->input->post('departemen');
-		
-		$data = array(
-			'nama_bagian' => $nama_bagian,
-			'departemen' => $departemen
-		);
-		$this->bagian->tambahBagian($data,'bagian');
-		$this->session->set_flashdata('message','<div class="toast swalDefaultSuccess" role="alert">Data Berhasil dihapus !!!</div>');
-
-		redirect('admin/bagian', 'refresh');
+	function listBagian(){
+		$data = $this->bagian->listbagian();
+		echo json_encode($data);
 	}
 
-	function editBagian($id = null)
-	{
-		$data['title'] = "Bagian";
-		$data['breadcrumb'] = " Data Edit Bagian";
-		$bagian = $this->bagian;
-		$data["bagian"] = $bagian->getById($id);
-		$this->template->_partialsAdmin('admin/bagian/edit', $data);
-	}
+	function save_bagian(){
+		$data=$this->bagian->save();
+        echo json_encode($data);
+    }
 
-	function updateBagian($id = null)
-	{
-		$validation = $this->form_validation;
-		$bagian = $this->bagian;
-		$validation->set_rules($bagian->rules());
-			if ($validation->run()) {
-				$bagian->update_bagian();
-				$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">Data Berhasil diupdate !!!</div>');
-				redirect('admin/bagian');
-			}
-		$data["kategori"] = $kategori->getById($id);
-	}
+    function update_bagian(){
+        $data=$this->bagian->update();
+        echo json_encode($data);
+    }
 
-	function delete_bagian($id){
-		$id = array('id_bagian' => $id);
-		$this->bagian->hapus_bagian('bagian', $id);
-		$this->session->set_flashdata('message','<div class="Toast swalDefaultSuccess" role="alert">Data Berhasil dihapus !!!</div>');
-
-		redirect('admin/bagian');
+    function delete_bagian(){
+		$data=$this->bagian->delete_bagian();
+        echo json_encode($data);
     }
 
 	public function karyawan()
