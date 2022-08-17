@@ -21,27 +21,42 @@ class Bagian_model extends CI_Model
 		return $list->result();
 	}
 
-    function tambahBagian($data,$table){
-		$this->db->insert($table, $data);
-	}
+ //    function tambahBagian($data,$table){
+	// 	$this->db->insert($table, $data);
+	// }
+    function save(){
+        $data = array(
+            'id_bagian'  => $this->input->post('id_bagian'), 
+            'nama_bagian'  => $this->input->post('nama_bagian'), 
+            'departemen' => $this->input->post('departemen'), 
+        );
+        $result=$this->db->insert('bagian',$data);
+        return $result;
+    }
 
 	function getById($id)
     {
         return $this->db->get_where($this->_table, ["id_bagian" => $id])->row();
     }
 
-	function update_bagian()
+	function update()
     {
-        $post = $this->input->post();
-		
-		$this->id_bagian =$post['id'];
-		$this->nama_bagian =$post['nama_bagian'];
-		$this->departemen =$post['departemen'];
-		$this->db->update($this->_table, $this, array('id_bagian' => $post['id']));
+        $id_bagian=$this->input->post('id_bagian');
+        $nama_bagian=$this->input->post('nama_bagian');
+        $departemen = $this->input->post('departemen');
+ 
+        $this->db->set('nama_bagian', $nama_bagian);
+        $this->db->set('departemen', $departemen);
+        $this->db->where('id_bagian', $id_bagian);
+
+        $result=$this->db->update('bagian');
+        return $result;
     }
 
-	function hapus_bagian($table, $where)
-    {
-        return $this->db->delete($table, $where);
+    function delete_bagian(){
+        $id_bagian=$this->input->post('id_bagian');
+        $this->db->where('id_bagian', $id_bagian);
+        $result=$this->db->delete('bagian');
+        return $result;
     }
 }

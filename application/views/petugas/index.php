@@ -68,18 +68,28 @@ $label = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","Se
 								</td>
 								<td><?= $t['nama_karyawan']?></td>
 								<td class="text-center">
-									<a type="submit" class="btn btn-primary btn-sm btn-datang"
+									<?php if (empty($t['jam_masuk'])){ ?>
+										
+									<a type="submit" class="btn btn-danger btn-sm btn-datang"
 										href="<?= base_url() ?>petugas/kunjungan_tamu/checkin/<?= $t['nik'] ?>">
 										<i class="far fa-circle nav-icon">
 										</i>
 										Datang
 									</a>
-									<a type="submit" class="btn btn-danger btn-sm btn-keluar"
+									<?php } else if (empty($t['jam_keluar'])){ ?>
+									<a type="submit" class="btn btn-warning btn-sm btn-keluar"
 										href="<?= base_url() ?>petugas/kunjungan_tamu/checkout/<?= $t['nik'] ?>">
 										<i class="far fa-circle nav-icon">
 										</i>
 										Pulang
 									</a>
+									<?php } else {?>
+									<button class="btn btn-success">
+										<i class="far fa-check-circle nav-icon">
+											Complete
+										</i>
+									</button>
+									<?php } ?>
 								</td>
 								</tr>
 								<?php }

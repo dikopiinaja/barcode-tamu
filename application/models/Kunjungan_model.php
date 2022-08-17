@@ -40,6 +40,7 @@ class Kunjungan_model extends CI_Model
 		$this->db->from('tamu');
 		// $this->db->join('tamu_detail', 'tamu_detail.nik = tamu.nik', 'left');
 		$this->db->join('karyawan', 'karyawan.id_karyawan = tamu.id_karyawan', 'left');
+		$this->db->join('tamu_detail', 'tamu_detail.nik = tamu.nik', 'left');
         $this->db->like('tgl_berkunjung', $tgl_berkunjung);
 
        
@@ -48,6 +49,10 @@ class Kunjungan_model extends CI_Model
 
 	function insert($data)
 	{
+		$data = array(
+			'nik'  => $this->input->post('nik'),
+			'tgl_kunjungan'  => date('Y-m-d')
+		);
 		$this->db->insert('tamu_detail',$data);
         return TRUE;
 	}

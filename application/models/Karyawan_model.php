@@ -6,7 +6,7 @@ class Karyawan_model extends CI_Model
 		// return $list->result();
 		$this->db->select('*');
 		$this->db->from('karyawan');
-		$this->db->join('bagian', 'bagian.id_bagian = karyawan.bagian');
+		$this->db->join('bagian', 'karyawan.bagian = bagian.id_bagian');
 		$query = $this->db->get();
 		
 		return $query->result();

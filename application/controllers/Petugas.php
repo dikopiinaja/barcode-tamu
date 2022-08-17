@@ -7,6 +7,7 @@ class Petugas extends CI_Controller {
 		if($this->session->userdata('logged_in') !== TRUE){
 			redirect('auth');
 		}
+		$this->load->model('Karyawan_model', 'karyawan');
 		$this->load->model('Petugas_model', 'petugas');
 		$this->load->model('AuthModel', 'auth');
 		$this->load->model('Kunjungan_model', 'kunjungan');
@@ -45,7 +46,7 @@ class Petugas extends CI_Controller {
 
 	function listkaryawan()
 	{
-		$data = $this->Karyawan_model->listKaryawan();
+		$data = $this->karyawan->listKaryawan();
 		echo json_encode($data);
 	}
 
@@ -67,16 +68,16 @@ class Petugas extends CI_Controller {
 		$waktu = date('H:i:s');
 	   	if ($to=="checkin") {
 			$data1 = $this->kunjungan->get_byid($id);
-				foreach ($data1 as $tamu){
-					$nik = $tamu->nik;
-				}
+				// foreach ($data1 as $tamu){
+				// 	$nik = $tamu->nik;
+				// }
 					$data=array(
-						'nik'=>$nik,
-						'tgl_kunjungan'=>$tgl,
+						// 'nik'=>$nik,
+						// 'tgl_kunjungan'=>$tgl,
 						'jam_masuk'=>$waktu
 						// 'Status'=>'Hadir'
 					);
-					$this->kunjungan->insert($data);
+					$this->kunjungan->update($id,$data);
 					redirect('petugas');
 				} elseif ($to=="checkout"){
 						

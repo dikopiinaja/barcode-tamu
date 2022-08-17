@@ -1,6 +1,6 @@
 	<!-- /.content-wrapper -->
 	<footer class="main-footer">
-		<strong>Copyright &copy; 2021 <a href="https://adminlte.io">Selvi Setyaningsih</a>.</strong>
+		<strong>Copyright &copy; 2021 <a href="https://adminlte.io">diKopiinaja</a>.</strong>
 		All rights reserved.
 
 	</footer>
@@ -18,7 +18,7 @@
 	<!-- jQuery -->
 	<!-- <script src="<?= base_url('assets');?>/plugins/datatables/jquery.dataTables.js"></script> -->
 	<!-- <script src="../../plugins/datatables/jquery.dataTables.js"></script> -->
-<!-- <script src="<?= base_url('assets');?>/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script> -->
+	<!-- <script src="<?= base_url('assets');?>/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script> -->
 	<script src="<?= base_url('assets');?>/plugins/jquery/jquery.min.js"></script>
 	<!-- jQuery UI 1.11.4 -->
 	<script src="<?= base_url('assets');?>/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -58,6 +58,7 @@
 				tampilkaryawan(); 
 				karyawanpetugas();
 				tampilpetugas();
+				tampilbagian();
 
 				$('#mydata').DataTable();
 			
@@ -348,6 +349,14 @@
 				$('[name="id_petugas_delete"]').val(id_petugas);
 			});
 
+				//get data for delete record list petugas
+			$('#listBagian').on('click', '.item_delete', function () {
+				var id_bagian = $(this).data('id_bagian');
+
+				$('#Modal_Delete-bagian').modal('show');
+				$('[name="id_bagian_delete"]').val(id_bagian);
+			});
+
 			//delete record to database
 			$('#btn_delete').on('click', function () {
 				var id_karyawan = $('#id_karyawan_delete').val();
@@ -380,6 +389,118 @@
 						$('[name="id_petugas_delete"]').val("");
 						$('#Modal_Delete-petugas').modal('hide');
 						tampilpetugas();
+					}
+				});
+				return false;
+			});
+
+			//data tampil bagian ->admin
+			function tampilbagian() {
+				$.ajax({
+					type: 'ajax',
+					url: '<?php echo site_url('admin/listBagian')?>',
+					async: true,
+					dataType: 'json',
+					success: function (data) {
+						var html = '';
+						var i;
+						for (i = 0; i < data.length; i++) {
+							html += '<tr>' +
+								'<td>' + data[i].id_bagian + '</td>' +
+								'<td>' + data[i].nama_bagian + '</td>' +
+								'<td>' + data[i].departemen + '</td>' +
+								'<td style="text-align:right;">' +
+								'<a href="javascript:void(0);" class="btn btn-info btn-sm item_edit_bagian" data-id_bagian="' +
+								data[i].id_bagian + '" data-nama_bagian="' + data[i].nama_bagian +
+								'" data-departemen="' + data[i].departemen + '">Edit</a>' + ' ' +
+								'<a href="javascript:void(0);" class="btn btn-danger btn-sm item_delete" data-id_bagian="' +
+								data[i].id_bagian + '">Delete</a>' +
+								'</td>' +
+								'</tr>';
+						}
+						$('#listBagian').html(html);
+					}
+
+				});
+			}
+
+			//Save Bagian
+			$('#btn_save-bagian').on('click', function () {
+				var id_bagian = $('#id_bagian').val();
+				var nama_bagian = $('#nama_bagian').val();
+				var departemen = $('#departemen').val();
+				$.ajax({
+					type: "POST",
+					url: "<?php echo site_url('admin/save_bagian')?>",
+					dataType: "JSON",
+					data: {
+						id_bagian: id_bagian,
+						nama_bagian: nama_bagian,
+						departemen: departemen
+					},
+					success: function (data) {
+						$('[name="id_bagian"]').val("");
+						$('[name="nama_bagian"]').val("");
+						$('[name="departemen"]').val("");
+						$('#tambah_bagian').modal('hide');
+						// setInterval('location.reload()', 5000);  
+						tampilbagian();
+					}
+				});
+				return false;
+			});
+
+			//get data for update record
+			$('#listBagian').on('click', '.item_edit_bagian', function () {
+				var id_bagian = $(this).data('id_bagian');
+				var nama_bagian = $(this).data('nama_bagian');
+				var departemen = $(this).data('departemen');
+
+				$('#edit_bagian').modal('show');
+				$('[name="id_bagian_edit"]').val(id_bagian);
+				$('[name="nama_bagian_edit"]').val(nama_bagian);
+				$('[name="departemen_edit"]').val(departemen);
+			});
+
+			//update-bagian record to database
+			$('#btn_update_bagian').on('click', function () {
+				var id_bagian = $('#id_bagian_edit').val();
+				var nama_bagian = $('#nama_bagian_edit').val();
+				var departemen = $('#departemen_edit').val();
+				$.ajax({
+					type: "POST",
+					url: "<?php echo site_url('admin/update_bagian')?>",
+					dataType: "JSON",
+					data: {
+						id_bagian: id_bagian,
+						nama_bagian:	nama_bagian,
+						departemen: departemen
+					},
+					success: function (data) {
+						$('[name="id_bagian_edit"]').val("");
+						$('[name="nama_bagian_edit"]').val("");
+						$('[name="departemen_edit"]').val("");
+						$('#edit_bagian').modal('hide');
+						tampilbagian();
+					}
+				});
+				return false;
+			});
+
+			//delete record to database bagian
+			$('#btn_delete-bagian').on('click', function () {
+				var id_bagian = $('#id_bagian_delete').val();
+				$.ajax({
+					type: "POST",
+					url: "<?php echo site_url('admin/delete_bagian')?>",
+					dataType: "JSON",
+					data: {
+						id_bagian: id_bagian
+					},
+					success: function (data) {
+						$('[name="id_bagian_delete"]').val("");
+						$('#Modal_Delete-bagian').modal('hide');
+						tampilbagian();
 					}
 				});
 				return false;
